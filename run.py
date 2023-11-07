@@ -38,7 +38,6 @@ def run_command(command: str) -> str:
         " "), stdout=subprocess.PIPE, text=True)
     if result.returncode != 0:
         print(f"Failed to run command {command}")
-        print(result.stderr)
         exit(1)
     return result.stdout.strip()
 
@@ -121,10 +120,10 @@ if __name__ == "__main__":
     # make fw for nodes
     if args.endnode:
         run_command(
-            f"make -C {END_NODE_PATH} BOARD={BOARD} DEFAULT_CHANNEL={WIRELESS_CHANNEL} DEFAULT_PAN_ID={PAN_ID}")
+            f"make -C {END_NODE_PATH} BOARD={BOARD} DEFAULT_CHANNEL={WIRELESS_CHANNEL} DEFAULT_PAN_ID={PAN_ID} clean all")
     if args.router:
         run_command(
-            f"make -C {ROUTER_PATH} ETHOS_BAUDRATE=500000 BOARD={BOARD} DEFAULT_CHANNEL={WIRELESS_CHANNEL} DEFAULT_PAN_ID={PAN_ID}")
+            f"make -C {ROUTER_PATH} ETHOS_BAUDRATE=500000 BOARD={BOARD} DEFAULT_CHANNEL={WIRELESS_CHANNEL} DEFAULT_PAN_ID={PAN_ID} clean all")
     if args.endnode or args.router:
         print("Firmware built")
     # flash nodes
@@ -139,8 +138,9 @@ if __name__ == "__main__":
 
     if args.router:
         print(f"""
-To start router open a new terminal, check free interfaces and run:
+To start router open a new terminal, ssh to {SITE}, check free interfaces and start router:
+ssh <name>@{SITE}.iot-lab.info
 ip -6 addr | grep tap
-sudo ethos_uhcpd.py {router_id} <tap> <ipv6_prefix>::/64"
+sudo ethos_uhcpd.py {router_id} <tap> <ipv6_prefix>::/64
 
 Available prefixes for {SITE} are {IP_RANGE[SITE]}""")
