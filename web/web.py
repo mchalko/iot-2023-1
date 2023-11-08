@@ -1,5 +1,8 @@
 import bottle
 import mqtt_client as mqtt
+import os
+import sys
+
 
 SERVER_OPTS = {
         "host": "0.0.0.0",
@@ -12,6 +15,10 @@ SERVER_OPTS = {
 STATIC_WEB_ROUTES = {
     "/" : "index",
 }
+
+def make_path(path):
+    p =  f"{os.path.dirname(os.path.abspath(sys.argv[0]))}/views/{path}"
+    return p
 
 def route(path: str, method: str = "GET"):
     """Decorator to add default headers to routes"""
@@ -31,7 +38,7 @@ def get_value(name):
 
 for k, v in STATIC_WEB_ROUTES.items():
     # apply custom headers
-    route(k, "GET")(lambda x=v, **kwargs : bottle.template(x, **kwargs))
+    route(k, "GET")(lambda x=v, **kwargs : bottle.template(make_path(x), **kwargs))
     
 
 # ------------------------------------------------------------------------------
