@@ -57,7 +57,6 @@ class DataResource(resource.Resource):
             for k, v in loaded.items():
                 if k in KEYS.keys():
                     data[k] = KEYS[k](v)
-            data["time"] = get_local_time()
             collection.insert_one(data)
             return aiocoap.Message(code=aiocoap.CREATED)
         except Exception as e:
