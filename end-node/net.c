@@ -133,7 +133,7 @@ int net_publish_data(int temp, int pres, int light){
     "\"" DATA_KEY_TEMP  "\":%i,"
     "\"" DATA_KEY_PRES  "\":%i,"
     "\"" DATA_KEY_LIGHT "\":%i"
-    "}", pres, temp, light);
+    "}", temp, pres, light);
 
     return net_publish_json(data_uri, result);
 }

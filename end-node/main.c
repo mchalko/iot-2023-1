@@ -27,6 +27,7 @@ int main(void) {
         // read data from sensor
         if(flag){
             lpsxxx_read_temp(&lpsxxx, &temp);
+            temp /= 100;
             net_publish_data(temp, pres, 0);
         }else{
             lpsxxx_read_pres(&lpsxxx, &pres);
