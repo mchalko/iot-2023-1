@@ -7,24 +7,26 @@ BOARD ?= native
 # This has to be the absolute path to the RIOT base directory:
 RIOTBASE ?= ../RIOT
 
-# Include packages that pull up and auto-init the link layer.
-# NOTE: 6LoWPAN will be included if IEEE802.15.4 devices are present
 USEMODULE += netdev_default
 USEMODULE += auto_init_gnrc_netif
-# Activate ICMPv6 error messages
-USEMODULE += gnrc_icmpv6_error
-# Specify the mandatory networking module for a IPv6 routing node
-USEMODULE += gnrc_ipv6_router_default
-# Add a routing protocol
-USEMODULE += gnrc_rpl
-USEMODULE += auto_init_gnrc_rpl
+USEMODULE += gnrc_ipv6_default
 
-USEPKG += paho-mqtt
+USEMODULE += gcoap
 
-USEMODULE += sock_async_event
-USEMODULE += sock_ip
-USEMODULE += sock_udp
-USEMODULE += sock_tcp
+USEMODULE += od
+USEMODULE += fmt
+USEMODULE += netutils
+USEMODULE += random
+
+GCOAP_ENABLE_DTLS ?= 1
+
+# Required by DTLS.
+USEPKG += tinydtls
+USEMODULE += sock_dtls
+USEMODULE += tinydtls_sock_dtls
+USEMODULE += gcoap_dtls
+# tinydtls needs crypto secure PRNG
+USEMODULE += prng_sha1prng
 
 USEMODULE += ztimer
 USEMODULE += ztimer_msec
@@ -53,3 +55,4 @@ include $(RIOTMAKE)/default-radio-settings.inc.mk
 
 #enable debug prints
 CFLAGS += -DUSE_DPRINT=y
+CFLAGS += -DCONFIG_DTLS_PSK

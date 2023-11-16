@@ -18,7 +18,7 @@ IP_RANGE = {
 
 SITE = "grenoble" # site where experiment will be run
 NAME = "IOTproject" # name of experiment
-DURATION = 60 # duration of experiment in minutes
+DURATION = 120 # duration of experiment in minutes
 TIMEOUT = 30 # timeout for experiment to start
 WIRELESS_CHANNEL = 18 # wireless channel for 802.15.4
 PAN_ID = 0x2288 # pan id for 802.15.4
@@ -29,10 +29,7 @@ ROUTER_PATH = "border-router" # path to router firmware
 
 
 def run_command(command: str) -> str:
-    """
-    Run command and return stdout
-    """
-
+    """ Run command and return stdout """
     print("> " + command)
     result = subprocess.run(command.split(
         " "), stdout=subprocess.PIPE, text=True)
@@ -43,18 +40,12 @@ def run_command(command: str) -> str:
 
 
 def get_executable(path: str) -> str:
-    """
-    Get firmware executable by path
-    """
-
+    """ Get firmware executable by path """
     return glob.glob(f"{path}/bin/{BOARD}/*.bin")[0]
 
 
 def get_experiment() -> str:
-    """
-    Try to get experiment id with given name
-    """
-
+    """ Try to get experiment id with given name """
     # check if experiment is already running
     result = run_command("iotlab-experiment get -e")
     result = json.loads(result)
@@ -69,10 +60,7 @@ def get_experiment() -> str:
 
 
 def create_experiment() -> str:
-    """
-    Create new experiment
-    """
-
+    """ Create new experiment """
     # reserve nodes
     result = run_command(
         f"iotlab-experiment submit -n {NAME} -d {DURATION} -l 2,archi=m3:at86rf231+site={SITE}")
