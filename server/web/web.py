@@ -1,19 +1,24 @@
+#!/usr/bin/python3
+# Author: Miroslav Chalko
+# Web server for IoT-LAB project
+
 import bottle
-import mqtt_client as mqtt
+import db_interface as db
 import os
 import sys
 
-
 SERVER_OPTS = {
         "host": "0.0.0.0",
-        "port": 80,
+        "port": 8080,
         "reloader": False,
         "debug": True,
         "quiet": False
     }
 
 STATIC_WEB_ROUTES = {
-    "/" : "index",
+    "/" : "home",
+    "/home" : "home",
+    "/about" : "about",
 }
 
 def make_path(path):
@@ -31,10 +36,13 @@ def route(path: str, method: str = "GET"):
         return func
     return inner
 
-@route('/sensor', method='POST')
-def get_value(name):
-    return "0"
+@route('/get_data', method='POST')
+def get_data():
+    return db.get_last_data()
 
+@route('/get_time', method='POST')
+def get_time():
+    return db.get_last_time()
 
 for k, v in STATIC_WEB_ROUTES.items():
     # apply custom headers
@@ -44,6 +52,6 @@ for k, v in STATIC_WEB_ROUTES.items():
 # ------------------------------------------------------------------------------
 # Run the httpserver
 # ------------------------------------------------------------------------------
-mqtt.connect()
+db.init()
 bottle.run(**SERVER_OPTS)
-mqtt.disconnect()
+db.stop()
