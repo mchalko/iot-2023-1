@@ -14,11 +14,6 @@
 
 static lpsxxx_t lpsxxx;
 
-char data [150];
-#define TOPIC_PRESSURE "pressure"
-#define TOPIC_TEMPERATURE "temperature"
-
-
 int main(void) {
     int16_t temp = 0;
     uint16_t pres = 0;
@@ -27,23 +22,19 @@ int main(void) {
     lpsxxx_init(&lpsxxx, &lpsxxx_params[0]);
     // initialize network
     net_init();
-    // connect to host
-    while(net_connect() < 0){}
-
+    
     for(;;){
         // read data from sensor
         if(flag){
             lpsxxx_read_temp(&lpsxxx, &temp);
-            sprintf(data, "%i.%u", temp / 100, temp % 100);
-            net_publish(TOPIC_TEMPERATURE, data);
+            net_publish_data(temp, pres, 0);
         }else{
             lpsxxx_read_pres(&lpsxxx, &pres);
-            sprintf(data, "%d", pres);
-            net_publish(TOPIC_PRESSURE, data);
+            net_publish_data(temp, pres, 0);
         }
         flag = !flag;
         
-        ztimer_sleep(ZTIMER_MSEC, 5000);
+        ztimer_sleep(ZTIMER_MSEC, 2000);
     }
 
     return 0;

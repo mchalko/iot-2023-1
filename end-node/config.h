@@ -1,17 +1,20 @@
 /**
  * @file config.h
+ * @author Miroslav Chalko
  * @brief generic config file
 */
 
-#define MQTT_VERSION_v311 4 // MQTT version 3.1.1
-#define COMMAND_TIMEOUT_MS 4000 // network command timeout
+#define HOST_ADDR "2603:c026:c103:7f77:d52:bbe3:21fd:cb2c" // server address
+#define HOST_PORT 5684 // server port
+#define DATA_URI "/data" // data URI
 
-#define MQTT_CLIENT_ID "end-node" // MQTT client ID
-#define MQTT_USER "" // MQTT user
-#define MQTT_PWD "" // MQTT password
-#define MQTT_HOST "2603:c026:c103:7f77:d52:bbe3:21fd:cb2c" // MQTT server host
-#define MQTT_PORT 1883 // MQTT server port
-#define MQTT_QOS 1 // MQTT QoS
+#define FAIL_REBOOT_TRESHOLD 5 // reboot after x failed sends
 
-#define DEFAULT_KEEPALIVE_SEC 120 // MQTT keepalive
-#define MQTT_RETAIN_MSG 1 // mqtt retain message on server
+#define DATA_KEY_TEMP "temperature" // temperature key
+#define DATA_KEY_PRES "pressure" // pressure key
+#define DATA_KEY_LIGHT "light" // light key
+
+#define PSK_IDENTITY "client"
+#define PSK_KEY "123"
+
+#define KEEPALIVE_INTERVAL_SEC 120 // keepalive

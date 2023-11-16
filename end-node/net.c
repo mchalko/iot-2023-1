@@ -6,97 +6,134 @@
 
 #include "net.h"
 
-#include <string.h>
 #include "utils.h"
 #include "config.h"
 
-#include "timex.h"
-#include "ztimer.h"
-#include "thread.h"
-#include "mutex.h"
-#include "paho_mqtt.h"
-#include "MQTTClient.h"
+#include <stdlib.h>
+#include <string.h>
 
-#define BUFFER_SIZE 1024
+#include <arpa/inet.h>
 
-static MQTTClient client;
-static Network network;
-static uint8_t rx_buffer[BUFFER_SIZE];
-static uint8_t tx_buffer[BUFFER_SIZE];
+#include "fmt.h"
+#include "net/gcoap.h"
+#include "net/sock/util.h"
+#include "net/sock/dtls.h"
+#include "net/sock/dtls/creds.h"
+#include "net/utils.h"
+#include "od.h"
+#include "periph/pm.h"
+#include "net/credman.h"
+#include "net/dsm.h"
 
-/**
- * @brief Convert QoS from uint8_t to enum
-*/
-static enum QoS get_qos(uint8_t q){
-    switch (q){
-        case 0 : return QOS0;
-        case 1 : return QOS1;
-        case 2 : return QOS2;
-        default: return QOS0;
-    }
-}
+#define CREDENTIAL_TAG 1
 
-void net_init(void){
-    NetworkInit(&network);
-    MQTTClientInit(&client, &network, COMMAND_TIMEOUT_MS, tx_buffer, BUFFER_SIZE, rx_buffer, BUFFER_SIZE);
-    MQTTStartTask(&client);
-    DPRINTLN("MQTT client initialized");
-}
+static const char data_uri [] = DATA_URI;
+static const char destination [] =  "[" HOST_ADDR "]:"STR(HOST_PORT);
+static const uint8_t psk_id[] = PSK_IDENTITY;
+static const uint8_t psk_key[] = PSK_KEY;
+static const credman_credential_t credential = {
+    .type = CREDMAN_TYPE_PSK,
+    .tag = CREDENTIAL_TAG,
+    .params = {
+        .psk = {
+            .key = { .s = psk_key, .len = sizeof(psk_key) - 1, },
+            .id = { .s = psk_id, .len = sizeof(psk_id) - 1, },
+        }
+    },
+};
 
-int net_connect(void){
-    int ret = 0;
+static sock_udp_ep_t remote; // remote endpoint
+static uint32_t fail_count; // counter of failed sends
 
-    MQTTPacket_connectData data = MQTTPacket_connectData_initializer;
-    data.MQTTVersion = MQTT_VERSION_v311;
-    data.clientID.cstring = MQTT_CLIENT_ID;
-    data.username.cstring = MQTT_USER;
-    data.password.cstring = MQTT_PWD;
-    data.keepAliveInterval = DEFAULT_KEEPALIVE_SEC;
-    data.cleansession = 1;
-    data.willFlag = 0;
-
-    ret = NetworkConnect(&network, MQTT_HOST, MQTT_PORT);
-    if (ret < 0) {
-        DPRINTLN("Unable to connect network %d", ret);
-        return ret;
-    }
-    DPRINTLN("Network connected");
-
-    ret = MQTTConnect(&client, &data);
-    if (ret < 0) {
-        DPRINTLN("Unable to connect client %d", ret);
-        net_disconnect();
-        return ret;
-    } 
-    DPRINTLN("MQTT client connected");
-
-    return ret;
-}
-
-void net_disconnect(void){
-    int ret = MQTTDisconnect(&client);
-    if (ret < 0) {
-        DPRINTLN("Unable to disconnect client");
-    } 
-
-    NetworkDisconnect(&network);
-    DPRINTLN("Network disconnected");
-}
-
-int net_publish(const char *topic, const char *data){
+int net_init(void){
     int ret;
 
-    MQTTMessage message;
-    message.qos = get_qos(MQTT_QOS);
-    message.retained = MQTT_RETAIN_MSG;
-    message.payload = (void *)data;
-    message.payloadlen = strlen(data);
-
-    if ((ret = MQTTPublish(&client, topic, &message)) < 0) {
-        DPRINTLN("Unable to publish (%d)", ret);
-    } else {
-        DPRINTLN("Sending (%s) : %s", (char *)message.payload, topic);
+    // initialize udp socket
+    ret = sock_udp_name2ep(&remote, destination);
+    if (ret < 0) {
+        DPRINTLN("gcoap: sock init failed");
+        goto out;
     }
 
+    // initialize dtls - add credentials and assign socket
+    ret = credman_add(&credential);
+    if(ret < 0){
+        DPRINTLN("gcoap: credman add failed");
+        goto out;
+    }
+
+    sock_dtls_t * sock = gcoap_get_sock_dtls();
+    ret = sock_dtls_add_credential(sock, CREDENTIAL_TAG);
+    if (ret < 0) {
+        DPRINTLN("gcoap: sock dtls add cred failed");
+        goto out;
+    }
+
+    DPRINTLN("gcoap: client initialized, host: %s", destination);
+
+out : 
     return ret;
+}
+
+
+int net_publish_json(const char* uri, const char *data){
+    int ret;
+
+    uint8_t buf[CONFIG_GCOAP_PDU_BUF_SIZE];
+    coap_pkt_t pdu;
+    uint8_t len;
+    uint16_t datalen = strlen(data);
+
+    ret = gcoap_req_init(&pdu, buf, CONFIG_GCOAP_PDU_BUF_SIZE, COAP_METHOD_POST, uri);
+    if (ret < 0){
+        DPRINTLN("gcoap: req init failed");
+        goto out;
+    }
+
+    coap_hdr_set_type(pdu.hdr, COAP_TYPE_CON); // confirmable
+    ret = coap_opt_add_format(&pdu, COAP_FORMAT_JSON); // json format
+    if (ret < 0){
+        DPRINTLN("gcoap: opt add opt - format failed");
+        goto out;
+    }
+
+    ret = coap_opt_finish(&pdu, COAP_OPT_FINISH_PAYLOAD); // with payload
+    if (ret < 0){
+        DPRINTLN("gcoap: opt finish failed");
+        goto out;
+    }
+    // add payload
+    len = ret + datalen;
+    memcpy(pdu.payload, data, datalen);
+
+    // send request
+    ret = gcoap_req_send(buf, len, &remote, NULL, NULL);
+    if(ret < 0){
+        DPRINTLN("gcoap: send fail, dtls not estabilisted");
+    }else if (ret == 0){
+        DPRINTLN("gcoap: send failed");
+        fail_count++;
+        if(fail_count > FAIL_REBOOT_TRESHOLD){
+            DPRINTLN("gcoap: rebooting due to failed sends");
+            pm_reboot();
+        }
+    }else{
+        fail_count = 0;
+        DPRINTLN("gcoap: sent %i bytes", ret);
+    }
+
+out:
+    return ret;
+}
+
+int net_publish_data(int temp, int pres, int light){
+    char result [128];
+    sprintf(result, 
+    "{"
+    "\"" DATA_KEY_TEMP  "\":%i,"
+    "\"" DATA_KEY_PRES  "\":%i,"
+    "\"" DATA_KEY_LIGHT "\":%i"
+    "}", pres, temp, light);
+
+    return net_publish_json(data_uri, result);
 }

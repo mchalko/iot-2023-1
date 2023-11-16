@@ -8,24 +8,22 @@
 
 /**
  * @brief Initialize network
-*/
-void net_init(void);
-
-/**
- * @brief Connect to network
  * @return 0 on success
 */
-int net_connect(void);
+int net_init(void);
 
 /**
- * @brief Disconnect from network
-*/
-void net_disconnect(void);
-
-/**
- * @brief Publish data to server
- * @param topic Topic to publish data to
+ * @brief Publish json data to server
  * @param data Data to publish
  * @return 0 on success
 */
-int net_publish(const char *topic, const char *data);
+int net_publish_json(const char* uri, const char *data);
+
+/**
+ * @brief Publish data to server
+ * @param temp Temperature
+ * @param pres Pressure
+ * @param light Light
+ * @return 0 on success
+*/
+int net_publish_data(int temp, int pres, int light);
