@@ -14,7 +14,6 @@ def _on_connect(client, userdata, flags, rc):
         print("Failed to connect, return code %d\n", rc)
 
 def _on_message(client, userdata, msg):
-    print(msg)
     messages[msg.topic] = msg.payload.decode()    
         
 def connect():
@@ -31,6 +30,3 @@ def connect():
 def disconnect():
     client.disconnect()
     client.loop_stop(force=False)
-
-def get_data():
-    return "<br>".join(f"{k} : {v}" for k, v in messages.items())
