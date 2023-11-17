@@ -5,15 +5,14 @@
 import json
 import subprocess
 import glob
-import os
 import argparse
 
 # public IP ranges for each site
 IP_RANGE = {
-    "grenoble": "2001:660:5307:3100::/64 - 2001:660:5307:317f::/64",
-    "lille": "2001:660:4403:0480::/64 - 2001:660:4403:04ff::/64",
-    "saclay": "2001:660:3207:04c0::/64 - 2001:660:3207:04ff::/64",
-    "strasbourg": "2a07:2e40:fffe:00e0::/64 - 2a07:2e40:fffe:00ff::/64"
+    "grenoble": "2001:660:5307:3101::/64 - 2001:660:5307:317f::/64",
+    "lille": "2001:660:4403:0481::/64 - 2001:660:4403:04ff::/64",
+    "saclay": "2001:660:3207:04c1::/64 - 2001:660:3207:04ff::/64",
+    "strasbourg": "2a07:2e40:fffe:00e1::/64 - 2a07:2e40:fffe:00ff::/64"
 }
 
 SITE = "grenoble" # site where experiment will be run
@@ -28,15 +27,15 @@ END_NODE_PATH = "end-node" # path to end-node firmware
 ROUTER_PATH = "border-router" # path to router firmware
 
 
-def run_command(command: str) -> str:
+def run_command(command: str, capture_stdout=True) -> str:
     """ Run command and return stdout """
     print("> " + command)
     result = subprocess.run(command.split(
-        " "), stdout=subprocess.PIPE, text=True)
+        " "), stdout=subprocess.PIPE if capture_stdout else None, text=True)
     if result.returncode != 0:
         print(f"Failed to run command {command}")
         exit(1)
-    return result.stdout.strip()
+    return result.stdout.strip() if capture_stdout else ""
 
 
 def get_executable(path: str) -> str:
@@ -108,19 +107,19 @@ if __name__ == "__main__":
     # make fw for nodes
     if args.endnode:
         run_command(
-            f"make -C {END_NODE_PATH} BOARD={BOARD} DEFAULT_CHANNEL={WIRELESS_CHANNEL} DEFAULT_PAN_ID={PAN_ID} clean all")
+            f"make -C {END_NODE_PATH} BOARD={BOARD} DEFAULT_CHANNEL={WIRELESS_CHANNEL} DEFAULT_PAN_ID={PAN_ID} clean all", capture_stdout=False)
     if args.router:
         run_command(
-            f"make -C {ROUTER_PATH} ETHOS_BAUDRATE=500000 BOARD={BOARD} DEFAULT_CHANNEL={WIRELESS_CHANNEL} DEFAULT_PAN_ID={PAN_ID} clean all")
+            f"make -C {ROUTER_PATH} ETHOS_BAUDRATE=500000 BOARD={BOARD} DEFAULT_CHANNEL={WIRELESS_CHANNEL} DEFAULT_PAN_ID={PAN_ID} clean all", capture_stdout=False)
     if args.endnode or args.router:
         print("Firmware built")
     # flash nodes
     if args.endnode:
         run_command(
-            f"iotlab-node -i {experiment_id} --flash {get_executable(END_NODE_PATH)} -l {SITE},{end_node_id.replace('-',',')}")
+            f"iotlab-node -i {experiment_id} --flash {get_executable(END_NODE_PATH)} -l {SITE},{end_node_id.replace('-',',')}", capture_stdout=False)
     if args.router:
         run_command(
-            f"iotlab-node -i {experiment_id} --flash {get_executable(ROUTER_PATH)} -l {SITE},{router_id.replace('-',',')}")
+            f"iotlab-node -i {experiment_id} --flash {get_executable(ROUTER_PATH)} -l {SITE},{router_id.replace('-',',')}", capture_stdout=False)
     if args.endnode or args.router:
         print("Firmware flashed")
 
@@ -132,3 +131,12 @@ ip -6 addr | grep tap
 sudo ethos_uhcpd.py {router_id} <tap> <ipv6_prefix>::/64
 
 Available prefixes for {SITE} are {IP_RANGE[SITE]}""")
+        
+    if args.endnode:
+        print(f"""
+To capture serial output of an endnode open a new terminal, ssh to {SITE} and run nc:
+ssh <name>@{SITE}.iot-lab.info
+nc {end_node_id} 20000
+""")
+
+    print(f"End node id: {end_node_id}, Router id: {router_id}")

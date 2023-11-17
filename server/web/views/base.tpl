@@ -35,7 +35,7 @@
 
 <body class="d-flex h-100">
     <div class="cover-container d-flex w-100 h-100 mx-auto flex-column">
-        
+        <!--Header-->
         <header class="mb-auto bg-dark text-white p-3">
             <div>
                 <h3 class="float-md-start mb-0">IoT Project - Weather Station</h3>
@@ -45,18 +45,16 @@
                 </nav>
             </div>
         </header>
-
+        <!--Main-->
         <main class="p-3 text-center flex-grow-1 ">
             {{!base}}
         </main>
-
+        <!--Footer-->
         <footer class="mt-auto text-end text-white-50 bg-dark">
             <div class="p-1 me-3">2023</div>
         </footer>
     
     </div>
-
-
    
     <script>
         var type = "{{nav}}";

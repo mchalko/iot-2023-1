@@ -1,4 +1,7 @@
 #!/bin/bash
+# Author: Miroslav Chalko
+# Stop script for server
+
 sudo systemctl stop mongod
 kill -9 `cat log/web_pid`
 rm log/web_pid
