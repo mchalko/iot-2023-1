@@ -34,6 +34,9 @@ USEMODULE += ztimer_msec
 # temperture sensor
 USEMODULE += lps331ap
 
+# ambient light sensor
+USEMODULE += isl29020
+
 # Comment this out to disable code in RIOT that does safety checking
 # which is not needed in a production environment but helps in the
 # development process:
