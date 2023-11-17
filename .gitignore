@@ -2,6 +2,7 @@
 .history/
 build/
 bin/
+log/
 
 # Django #
 *.log
