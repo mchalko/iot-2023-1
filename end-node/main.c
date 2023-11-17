@@ -30,8 +30,8 @@ int main(void) {
     int16_t pres_diff;
     const uint16_t pres_tolerance = 10; // hPa
 
-    uint16_t lux = 0;
-    uint16_t last_lux = 0;
+    int16_t lux = 0;
+    int16_t last_lux = 0;
     int16_t lux_diff;
     const uint16_t lux_tolerance = 10; // lux
 
