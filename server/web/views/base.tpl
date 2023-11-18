@@ -41,6 +41,7 @@
                 <h3 class="float-md-start mb-0">IoT Project - Weather Station</h3>
                 <nav class="nav nav-masthead justify-content-center float-md-end">
                     <a id="nav-home" class="nav-link" href="/home">Home</a>
+                    <a id="nav-data" class="nav-link" href="/data">Data</a>
                     <a id="nav-about" class="nav-link" href="/about">About</a>
                 </nav>
             </div>
@@ -57,14 +58,12 @@
     </div>
    
     <script>
-        var type = "{{nav}}";
-        if (type == "about"){
-            $("#nav-about").addClass("active");
+        $(document).ready(function(){
             $("#nav-home").removeClass("active");
-        }else{
-            $("#nav-home").addClass("active");
+            $("#nav-data").removeClass("active");
             $("#nav-about").removeClass("active");
-        }
+            $("#nav-{{nav}}").addClass("active");
+        });        
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     

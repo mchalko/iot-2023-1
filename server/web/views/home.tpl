@@ -18,6 +18,8 @@
               <p id="card-pres" class="card-text fs-1 fw-bold"></p>
             </div>
           </div>
+        </div>
+        <div class="d-flex flex-wrap align-items-center justify-content-center gap-3 mt-3">
 
           <div class="card p-2 align-self-stretch" style="width: 18rem;">
             <i class="card-img-top fa-5x fa fa-sun-o text-warning" aria-hidden="true"></i>

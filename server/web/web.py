@@ -19,6 +19,7 @@ STATIC_WEB_ROUTES = {
     "/" : "home",
     "/home" : "home",
     "/about" : "about",
+    "/data" : "data"
 }
 
 def make_path(path):

@@ -39,6 +39,11 @@ def get_last(key:str, count:int) -> dict:
     if key not in KEYS:
         return {}
     return { _id_to_time(x["_id"]): x[key] for x in collection.find(sort=[('_id', pymongo.DESCENDING)], limit=count)}
+
+def get_last_all(count:int) -> dict:
+    """ Get last count values """
+    return { _id_to_time(x["_id"]): {k : x[k] for k in KEYS} for x in collection.find(sort=[('_id', pymongo.DESCENDING)], limit=count)}
+
     
 def init():
     """ Initialize and start watching database """
