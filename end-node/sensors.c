@@ -160,12 +160,11 @@ int sensors_measure(sensors_handle_t *handle){
             diff = s->measure((void*)s);
             
             if(!flag){
-                flag = 1;
                 s->sleep_time = MIN_SLEEP_TIME_MS;
             }else if(isnan(diff) || diff < 0.1){
                 s->sleep_time = MAX_SLEEP_TIME_MS;
             }else {
-                s->sleep_time = 1000 * (uint32_t)(40.0 / (diff * diff));
+                s->sleep_time = 1000 * (uint32_t)(30.0 / (diff * diff));
                 s->sleep_time = MIN(s->sleep_time, MAX_SLEEP_TIME_MS);
                 s->sleep_time = MAX(s->sleep_time, MIN_SLEEP_TIME_MS);
             }
@@ -179,6 +178,8 @@ int sensors_measure(sensors_handle_t *handle){
         }
     }
 
+    flag = 1;
+                
     return ret;
 }
 
