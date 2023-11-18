@@ -70,6 +70,15 @@ int net_init(void){
     }
 
     DPRINTLN("gcoap: client initialized, host: %s", destination);
+    for(;;){
+        ret = net_publish_json("/dummy", "{}");
+        if (ret > 0){
+            break;
+        }else{
+            DPRINTLN("gcoap: trying to establish connection...");
+        }
+        ztimer_sleep(ZTIMER_MSEC, CONNECTION_RETRY_TIME_MS);
+    }
 
 out : 
     return ret;
@@ -126,14 +135,14 @@ out:
     return ret;
 }
 
-int net_publish_data(int temp, int pres, int light){
+int net_publish_data(float temp, float pres, float light){
     char result [128];
     sprintf(result, 
     "{"
-    "\"" DATA_KEY_TEMP  "\":%i,"
-    "\"" DATA_KEY_PRES  "\":%i,"
-    "\"" DATA_KEY_LIGHT "\":%i"
-    "}", temp, pres, light);
-
+    "\"" DATA_KEY_TEMP  "\":%i.%lu,"
+    "\"" DATA_KEY_PRES  "\":%lu.%lu,"
+    "\"" DATA_KEY_LIGHT "\":%lu"
+    "}", (int)temp, FLOAT_DECIMALS(temp, 10), (uint32_t)pres, FLOAT_DECIMALS(pres, 10), (uint32_t)light);
+    DPRINTLN("%s", result);
     return net_publish_json(data_uri, result);
 }

@@ -4,6 +4,9 @@
  * @brief network functions for publishing data 
 */
 
+#ifndef __NET_H__
+#define __NET_H__
+
 #include <stdint.h>
 
 /**
@@ -26,4 +29,6 @@ int net_publish_json(const char* uri, const char *data);
  * @param light Light
  * @return 0 on success
 */
-int net_publish_data(int temp, int pres, int light);
+int net_publish_data(float temp, float pres, float light);
+
+#endif // __NET_H__

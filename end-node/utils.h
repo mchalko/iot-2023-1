@@ -4,6 +4,9 @@
  * @brief Various utilities
  */
 
+#ifndef __UTILS_H__
+#define __UTILS_H__
+
 #include <stdint.h>
 
 #ifdef USE_DPRINT
@@ -16,21 +19,32 @@
 #endif
 
 #define _STR(x) #x
-#define STR(x) _STR(x)
-
-// set dynamic sleep limits
-static const uint32_t min_sleep = 5000; // ms
-static const uint16_t max_exp = 6; // 5 * 2^6 = 320 s max sleep time
-
-/** Scales sleep time based on rate of change.
-* min_sleep             for     diff * min_sleep / prev_sleep > tolerance
-* min_sleep * 2         for     tolerance/2 < diff * min_sleep / prev_sleep <= tolerance
-*                       ...
-* min_sleep * 2^max_exp for     diff * min_sleep / prev_sleep <= tolerance/max_exp
-*/
-uint32_t dynamic_sleep_time(int16_t* diff, uint32_t* prev_sleep, const uint16_t* tolerance);
 
 /**
-* Finds the smallest of three sleep times and decrements each accordingly
+ * @brief convert macro value to string
 */
-uint32_t least_sleep_time(uint32_t* time1, uint32_t* time2, uint32_t* time3);
+#define STR(x) _STR(x)
+
+/**
+ * @brief get minimum value
+*/
+#define MIN(a,b) (((a)<(b))?(a):(b))
+
+/**
+ * @brief get maximum value
+*/
+#define MAX(a,b) (((b)<(a))?(a):(b))
+
+/**
+ * @brief get absolute value
+*/
+#define ABS(a) (((a)<0)?(-(a)):(a))
+
+/**
+ * @brief convert decimal part of float to integer
+ * @param x float value
+ * @param places number of decimal places, e.g. for 3 decimal places use 1000
+*/
+#define FLOAT_DECIMALS(x, places) ((uint32_t)((((float)(ABS(x))) - ((int)(ABS(x)))) * places))
+
+#endif // __UTILS_H__

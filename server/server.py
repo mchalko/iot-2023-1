@@ -15,7 +15,7 @@ import json
 
 CLIENT_ID = "client"
 CLIENT_PSK = "123"
-KEYS = {"temperature" : float, "pressure":int, "light":int}
+KEYS = {"temperature" : float, "pressure" : float, "light" : int}
 
 dbclient = pymongo.MongoClient("mongodb://localhost:27017/")
 db = dbclient["iot-database"]
