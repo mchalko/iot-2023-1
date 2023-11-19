@@ -6,7 +6,7 @@
 - Testbed : https://www.iot-lab.info/testbed
 - Testbed labs : https://labs.iot-lab.info/
 - MQTT broker : https://mosquitto.org/
-- Cloud service : ?
+- Cloud service : Trying oracle cloud infrastructure?
 
 ---
 
