@@ -11,3 +11,15 @@
 ---
 
 - Used hardware : ?
+
+
+# Mini Lab Project 1 - Internet of Things - 521043S-3004
+
+## Introduction to Internet of Things (IoT)
+
+The Internet of Things (IoT) represents a revolutionary outcome of technology which seamless ly connect physical and digital world. Generally, IOT stands for a vast network of interconnected devices, ranging from everyday objects to complex industrial machinery that all embedded with sensors nd actuators. This interconnected system enables devices to communicate, collect, and share information in real-time, gaining unprecedented levels of automation and efficiency.
+
+The key strength of IoT lies in its ability to empower smart, data-driven decision-making across diverse sectors. From smart homes that optimize energy consumption to industrial applications that enhancing production processes, IoT has the ability to connect our world like never before. By using the techniques of data analytics and machine learning, IoT systems can identify patterns, predict trends, and automate responses, which eventually enhancing the overall productivity and user experiences.
+
+## Introduction to project
+
