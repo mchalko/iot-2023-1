@@ -23,3 +23,22 @@ The key strength of IoT lies in its ability to empower smart, data-driven decisi
 
 ## Introduction to project
 
+### Description
+This is a team project that create software solution enabling the secure and energy-efficient transmission of sensor data from smart objects to a cloud backend. AAdditionally, the collected data will be visualized through the cloud. 
+
+### Project scope
+
+In this project, using sensors measure weather parameters such as temperature, pressure and light, store the data in cloud and displayed thos data in a webpage.
+
+### Technologies used in project
+- FIT IoT-Lab (https://www.iot-lab.info) -  Board selected is M3
+        - Sensors selected 
+            - Temperature sensor
+            - Pressure sensor
+            - Light sensor
+
+- Operating Systems - RIOT (https://www.riot-os.org)
+
+- Protocols of the TCP/IP-Suite
+- 
+
