@@ -32,10 +32,10 @@ In this project, using sensors measure weather parameters such as temperature, p
 
 ### Technologies used in project
 - FIT IoT-Lab (https://www.iot-lab.info) -  Board selected is M3
-        * Sensors selected 
-            * Temperature sensor
-            * Pressure sensor
-            * Light sensor
+    - Sensors selected 
+        * Temperature sensor
+        * Pressure sensor
+        * Light sensor
 
 - Operating Systems - RIOT (https://www.riot-os.org)
 
