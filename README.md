@@ -24,6 +24,9 @@ This is a team project that create software solution enabling the secure and ene
 
 In this project, using sensors measure weather parameters such as temperature, pressure and light, store the data in cloud and display data in a webpage.
 
+![Local Image](../iot-2023-1/images/diagram_of_project.png)
+
+
 ## Technologies used in project
 ### Boards and Sensors
 In this project, we used the IoT-LaB M3 type board in FIT IOT-LAB test bed and focused on the sensors,
@@ -33,8 +36,8 @@ Sensors are accesses via I2C protocol.
 
 
 
-- Operating Systems - RIOT (https://www.riot-os.org)
+Operating Systems - RIOT (https://www.riot-os.org)
 
-- Protocols - Ipv6, DTLS, CoAP
-- 
+Protocols - Ipv6, DTLS, CoAP
+
 
