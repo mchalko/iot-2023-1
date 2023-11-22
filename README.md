@@ -34,7 +34,9 @@ In this project, we used the IoT-LaB M3 type board in FIT IOT-LAB test bed and f
 - Pressure  and Temperature sensor - LPS331AP
 Sensors are accesses via I2C protocol.
 
+![Local Image](../iot-2023-1/images/Architecture.png)
 
+[FIT IOT-LAB](https://www.iot-lab.info/docs/boards/iot-lab-m3/)
 
 Operating Systems - RIOT (https://www.riot-os.org)
 
