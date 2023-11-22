@@ -15,6 +15,11 @@
 
 # Mini Lab Project 1 - Internet of Things - 521043S-3004
 
+**Group Members** -
+- Miroslav Chalko
+- Kuisma Hannuksela
+- Sehani Siriwardana
+
 ## Introduction to project
 
 ### Description
@@ -51,6 +56,40 @@ IPv6 (Internet Protocol version 6) is the latest version of the Internet Protoco
 
 DTLS (Datagram Transport Layer Security) is a security protocol providing communication privacy for datagram protocols.
 
-CoAP (Constrained Application Protocol) is a lightweight web transfer protocol designed for resource-constrained devices, often used in IoT applications.
+CoAP (Constrained Application Protocol) is a lightweight web transfer protocol designed for resource-constrained devices, often used in IoT applications. The CoAP server was implemented by using python library ```iaocoap```.
+
+### Cloud 
+Oracle cloud was selected as the cloud infrastructure we were going to use. Following are the feature of Oracle cloud,
+
+Free for Limited-time 30 day free trial
+- US $300 credit for 30 days
+- Up to eight instances across all available services
+- Up to 5 TB of storage
+
+Always Free
+- Compute: (Note- 1 Oracle OCPU = 2 vCPUs)
+- 2 AMD-based VMs: 1/8 OCPU = 0.25 vCPU with 1 GB RAM each
+- 4 Arm-based VMs: 24 GB RAM total, 3,000 OCPU hours and - 18,000 GB memory hours per month
+- 2 Block Volumes Storage, 200 GB total
+- 10 GB Object Storage - Standard
+- 10 GB Object Storage - Infrequent Access
+- 10 GB Archive Storage
+- 10TB of network data egress/month per originating region
+- Resource Manager (managed terraform)
+- 5 OCI Bastions
+- 2 Oracle Autonomous Databases incl. Oracle Application Express (APEX), Oracle SQL Developer etc., each with 20GB storage
+- NoSQL Database with 25GB storage per table, up to 3 tables
+- 4 Load Balancers: 1 Flexible (10Mbps) and 3 Network
+Monitoring and Notifications
+
+
+### Database and Webpage
+
+The MongoDB was selected as the database management system and 
+
+## Procedure
+
+- First, the FIT IOT-LAB test M3 board was selected from the test bed. We focused only on two sensors in this board, namely light sensor and pressure and temperature sensor.  
+
 
 
