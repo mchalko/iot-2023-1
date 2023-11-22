@@ -24,7 +24,7 @@ This is a team project that create software solution enabling the secure and ene
 
 In this project, using sensors measure weather parameters such as temperature, pressure and light, store the data in cloud and display data in a webpage.
 
-![Local Image](../images/diagram_of_project.png)
+![Local Image](../iot-2023-1/images/diagram_of_project.png)
 
 
 ## Technologies used in project
