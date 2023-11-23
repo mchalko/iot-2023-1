@@ -29,7 +29,7 @@ This is a team project that create software solution enabling the secure and ene
 
 In this project, using sensors measure weather parameters such as temperature, pressure and light, store the data in cloud and display data in a webpage.
 
-![Local Image](../iot-2023-1/images/diagram_of_project.png)
+![Local Image](images/diagram_of_project.png)
 
 
 ## Technologies used in project
@@ -41,7 +41,7 @@ In this project, we used the IoT-LaB M3 type board in FIT IOT-LAB test bed and f
 
 Sensors are accesses via I2C protocol.
 
-![Local Image](../iot-2023-1/images/Architecture.PNG)
+![Local Image](images/Architecture.PNG)
 
 [FIT IOT-LAB](https://www.iot-lab.info/docs/boards/iot-lab-m3/)
 
