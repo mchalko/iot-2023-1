@@ -85,11 +85,17 @@ Monitoring and Notifications
 
 ### Database and Webpage
 
-The MongoDB was selected as the database management system and 
+The MongoDB was selected as the database management system and the implementation of database interface was done by using python library ```pymongo```. 
+
+The webpage was developed using Bottleneck Framework and Bootstrap.
 
 ## Procedure
 
-- First, the FIT IOT-LAB test M3 board was selected from the test bed. We focused only on two sensors in this board, namely light sensor and pressure and temperature sensor.  
+- First, the FIT IOT-LAB test M3 board was selected from the test bed. We focused only on two sensors in this board, namely light sensor and pressure and temperature sensor. SEnsors continues to measure light intensity, atmospheric pressure and ambient temperature. 
 
+
+- Then, initiates the pressure sensor and light sensor to start sampling data using I2C communication. There is one sensor to mesasure both pressure and temperature. It reads temperature and then convert raw sensor data to temperature value in Celsius. The pressure raw sensor data converted to value in Pascals. Then, the light sensor 
+
+- 
 
 
