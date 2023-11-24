@@ -111,5 +111,3 @@ The webpage was developed using Bottleneck Framework and Bootstrap.
 The following is the demonstration video of our project,
 
 [![Amazing Video](https://img.youtube.com/vi/iyjr8yyTiv8/0.jpg)](https://youtu.be/iyjr8yyTiv8)
-
-
