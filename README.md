@@ -93,9 +93,23 @@ The webpage was developed using Bottleneck Framework and Bootstrap.
 
 - First, the FIT IOT-LAB test M3 board was selected from the test bed. We focused only on two sensors in this board, namely light sensor and pressure and temperature sensor. SEnsors continues to measure light intensity, atmospheric pressure and ambient temperature. 
 
+- Then, initiates the pressure sensor and light sensor to start sampling data using I2C communication. There is one sensor to mesasure both pressure and temperature. It reads temperature and then convert raw sensor data to temperature value in Celsius. The pressure raw sensor data converted to value in Pascals. Then, the light sensor reads light intensity and convert raw data to a value in lux. These 2 sensors connected to the MCU via the I2C bus are embedded into the IoT-LAB M3 board.
 
-- Then, initiates the pressure sensor and light sensor to start sampling data using I2C communication. There is one sensor to mesasure both pressure and temperature. It reads temperature and then convert raw sensor data to temperature value in Celsius. The pressure raw sensor data converted to value in Pascals. Then, the light sensor 
+- Then, the board (end-node) is connected to 802.15.4 network, which is a local network. The data aquired are transferred throught this network. In order to connect to internet we use border router. Here, this border router also connectd to the same local 802.15.4 network and this border router is connected to master board using serial link. Tha data that transferred my en-node are now transferred to master board through serial link. Then, this master board transfer data to internet as normal ipv6 packet and it is recieved by the server that process data.
 
-- 
+- The data transferred to internet is stored in MongoDB which the in between communcation is carried using CoAP and also 
+
+
+
+
+
+
+
+
+## Demonstration
+
+The following is the demonstration video of our project,
+
+[![Amazing Video](https://img.youtube.com/vi/iyjr8yyTiv8/0.jpg)](https://youtu.be/iyjr8yyTiv8)
 
 
