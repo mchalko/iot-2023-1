@@ -10,7 +10,7 @@
 
 ### Description
 
-This is a project for IoT course at the university of Oulu. Aim of the [assignment](assignment.pdf) was to create a basic IoT pipeline, while using a remote MCU testbed provided by [FIT IOT-LAB](https://www.iot-lab.info/). Our implementation is a simple, single-node weather app. The end-node acquires weather data, such as temperature, pressure and light, and sends them to server. The server keeps valid data in a database and visualizes it using a custom web interface.
+This is a project for IoT course at the university of Oulu. Aim of the [assignment](assignment.pdf) was to create a basic IoT pipeline, while using a remote MCU testbed provided by [FIT IOT-LAB](https://www.iot-lab.info/). Our implementation is a simple, single-node weather app. The end-node acquires weather data, such as temperature, pressure and light, and sends them to a server. The server keeps valid data in a database and visualizes it using a custom web interface.
 
 ![Local Image](images/diagram_of_project.png)
 
@@ -18,9 +18,9 @@ This is a project for IoT course at the university of Oulu. Aim of the [assignme
 
 ### Hardware
 
-Hardware is provided by a remote testbed, [FIT IOT-LAB](https://www.iot-lab.info/). We used the [IoT-LaB M3](https://www.iot-lab.info/docs/boards/iot-lab-m3/) board, based on STM32F103REY (ARM Cortex M3). This board was specifically designed for the testbed, offers a lot of sensors as well as serial & 802.15.4 interfaces. Used sensors in this project:
+Hardware is provided by remote testbed, [FIT IOT-LAB](https://www.iot-lab.info/). We used the [IoT-LaB M3](https://www.iot-lab.info/docs/boards/iot-lab-m3/) board, based on STM32F103REY (ARM Cortex M3). This board was specifically designed for the testbed, offers a lot of sensors as well as serial and 802.15.4 interfaces. Used sensors in this project:
 - **ISL29020** - light sensor measuring both visible and IR light intensity
-- **LPS331AP** - pressure and Temperature sensor 
+- **LPS331AP** - pressure and temperature sensor 
 
 Both sensors are connected to I2C bus.
 
@@ -63,7 +63,7 @@ Web server is implemented as a [python script](server/web/web.py) using [Bottle]
 
 ## Getting Started
 
-- Clone this repository on a linux machine, install MongoDB, Python3, pymongo and aiocoap. Set up a replica set for MongoDB server. Do not forget to enable ports 8080 (web) and 5684 (CoAP) in firewall. 
+- Clone this repository on a linux machine, install MongoDB, Python3, pymongo and aiocoap. Set up a replica set for MongoDB server. Do not forget to enable ports 8080 (web) and 5684 (CoAP) in firewall
 - Run ```./server/start.sh``` to start all server side programs
 - Connect to FIT IOT-LAB testbed using ssh, or install cli tools & build environment locally
 - Clone repository, set up toolchain according to your own environment
