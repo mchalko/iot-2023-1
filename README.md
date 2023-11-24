@@ -4,7 +4,7 @@
 - Miroslav Chalko
 - Kuisma Hannuksela
 - Sehani Siriwardana
----
+
 ## Introduction to project
 
 
@@ -13,8 +13,6 @@
 This is a project for IoT course at the university of Oulu. Aim of the [assignment](assignment.pdf) was to create a basic IoT pipeline, while using a remote MCU testbed provided by [FIT IOT-LAB](https://www.iot-lab.info/). Our implementation is a simple, single-node weather app. The end-node acquires weather data, such as temperature, pressure and light, and sends them to server. The server keeps valid data in a database and visualizes it using a custom web interface.
 
 ![Local Image](images/diagram_of_project.png)
-
----
 
 ## Technologies used in project
 
@@ -62,8 +60,6 @@ Web server is implemented as a [python script](server/web/web.py) using [Bottle]
 #### Database
 
 [MongoDB](https://www.mongodb.com/) is used as the database for storage of acquired data. It's the most popular database used for python projects, especially if they won't need to access large amounts of data. It was chosen primarily due to the easy manipulation. Local MongoDB server needs to be installed and set up before running any of the other server-side python scripts. 
-
----
 
 ## Getting Started
 
