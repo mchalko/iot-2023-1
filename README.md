@@ -92,16 +92,8 @@ Always Free
 - 2 AMD-based VMs: 1/8 OCPU = 0.25 vCPU with 1 GB RAM each
 - 4 Arm-based VMs: 24 GB RAM total, 3,000 OCPU hours and - 18,000 GB memory hours per month
 - 2 Block Volumes Storage, 200 GB total
-- 10 GB Object Storage - Standard
-- 10 GB Object Storage - Infrequent Access
-- 10 GB Archive Storage
-- 10TB of network data egress/month per originating region
-- Resource Manager (managed terraform)
-- 5 OCI Bastions
-- 2 Oracle Autonomous Databases incl. Oracle Application Express (APEX), Oracle SQL Developer etc., each with 20GB storage
-- NoSQL Database with 25GB storage per table, up to 3 tables
-- 4 Load Balancers: 1 Flexible (10Mbps) and 3 Network
-Monitoring and Notifications
+- Virtual Cloud Networks (VCN): Maximum of 2 VCNs, includes IPv4 and IPv6 support
+
 
 ### Database and Web Page
 
@@ -153,13 +145,8 @@ The webpage was developed using Bottleneck Framework and Bootstrap.
 The following is the demonstration video of our project,
 
 
-[![Amazing Video](images/demo_project.png)](https://youtu.be/iyjr8yyTiv8)
+[![DEMO VIDEO](images/demo_project.png)](https://youtu.be/iyjr8yyTiv8)
 
-
-<!-- [![Amazing Video](https://img.youtube.com/vi/iyjr8yyTiv8/0.jpg)](https://youtu.be/iyjr8yyTiv8) -->
-
-
-<!-- [![Alt Text](path/to/your/image.png)](https://www.youtube.com/your-video-link) -->
 
 
 
