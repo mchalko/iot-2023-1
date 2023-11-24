@@ -1,152 +1,82 @@
-<!-- ## Project 1 for IoT course at university of Oulu
+# Project 1 - Internet of Things - 521043S-3004
 
-
-- Assignment : [link](assignment.pdf)
-- RIOT documentation : https://doc.riot-os.org/
-- Testbed docs : https://www.iot-lab.info/docs/
-- Testbed : https://www.iot-lab.info/testbed
-- Testbed labs : https://labs.iot-lab.info/
-- MQTT broker : https://mosquitto.org/
-- Cloud service : Trying oracle cloud infrastructure?
-
-
----
-
-
-- Used hardware : ? -->
-
-
-
-
-# Mini Lab Project 1 - Internet of Things - 521043S-3004
-
-
-**Group Members** -
+**Group Members**
 - Miroslav Chalko
 - Kuisma Hannuksela
 - Sehani Siriwardana
-
-
+---
 ## Introduction to project
 
 
 ### Description
-This is a team project that creates software solutions enabling the secure and energy-efficient transmission of sensor data from smart objects to a cloud backend. Additionally, the collected data will be visualized through the cloud.
 
-### Project scope
-
-In this project, sensors measure weather parameters such as temperature, pressure and light, store the data in clouds and display data in a webpage.
-
+This is a project for IoT course at the university of Oulu. Aim of the [assignment](assignment.pdf) was to create a basic IoT pipeline, while using a remote MCU testbed provided by [FIT IOT-LAB](https://www.iot-lab.info/). Our implementation is a simple, single-node weather app. The end-node acquires weather data, such as temperature, pressure and light, and sends them to server. The server keeps valid data in a database and visualizes it using a custom web interface.
 
 ![Local Image](images/diagram_of_project.png)
 
+---
 
 ## Technologies used in project
 
+### Hardware
 
-### Boards and Sensors
-In this project, we used the IoT-LaB M3 type board in FIT IOT-LAB test bed and focused on the sensors,
-- Light sensor -  This measures ambient light intensity in lux - ISL29020
-- Pressure  and Temperature sensor - This measures atmospheric pressure in hPa - LPS331AP
-
-
-Sensors are accessed via I2C protocol.
-
+Hardware is provided by a remote testbed, [FIT IOT-LAB](https://www.iot-lab.info/). We used the [IoT-LaB M3](https://www.iot-lab.info/docs/boards/iot-lab-m3/) board, based on STM32F103REY (ARM Cortex M3). This board was specifically designed for the testbed, offers a lot of sensors as well as serial & 802.15.4 interfaces. Used sensors in this project:
+- **ISL29020** - light sensor measuring both visible and IR light intensity
+- **LPS331AP** - pressure and Temperature sensor 
+Both sensors are connected to I2C bus.
 
 ![Local Image](images/Architecture.PNG)
 
 
-[FIT IOT-LAB](https://www.iot-lab.info/docs/boards/iot-lab-m3/)
+### End Node
 
+The FIT IOT-LAB M3 board is running [RIOT](https://www.riot-os.org) operating system. It periodically acquires data from the sensors and sends them to the server. To conserve energy, the board enters sleep mode between measurements. The length of sleep is dependant on measured delta (difference between current and previous measures), and the final sleep time is calculated using non-linear function. After boot, the board is waiting until the server connection is established, so make sure the server is running during tests. 
 
+All the relevant parameters, for example sleep time, server address, or credentials can be adjusted in the [config](end-node/config.h) file.
 
-### Operating System
-The FIT IOT-LAB M3 board which is mounted on the FIT IOT-LAB testbed is running RIOT (https://www.riot-os.org) operating system.
+### Border Router
 
+Since the M3 board does not have direct access to internet, border router is used to route traffic. The end node and border router are connected to the same 802.15.4 network, e.g. to the network with same ID. The border router accepts incoming packets and forwards them through serial interface towards master board. This second board has direct ipv6 connection, and forwards all the received packets. See more at [IOT-LAB](https://www.iot-lab.info/docs/getting-started/ipv6/)
 
-### Protocols
-The measurement data acquired by sensors are transferred through the internet via Ipv6, DTLS, CoAP protocols.
+There are no modifications to the border router firmware.
 
+### Network layer 
 
-IPv6 (Internet Protocol version 6) is the latest version of the Internet Protocol, offering a larger address space.
+The data acquired by end-node are transferred through the internet via IPv6 + DTLS + CoAP.
 
+The IOT-LAB offers only IPv6 connection. CoAP was chosen due to its lightweightness and flexibility, in contrast to mqtt. However, it is relatively new and experimental, the libraries used in this project are still in early development and might contain bugs. Nonetheless, reliability is not a primary objective for weather app. Security is provided by DTLS, datagram layer security. Used libraries do not support certificates yet, so only id and passphrase is required to connect to the server.
 
-DTLS (Datagram Transport Layer Security) is a security protocol providing communication privacy for datagram protocols.
+### Server 
 
+Any Linux machine with public IPv6 address can be used as a server. However, this project was developed, tested and used only using Ubuntu 22, behaviour might be different on other systems. 
 
-CoAP (Constrained Application Protocol) is a lightweight web transfer protocol designed for resource-constrained devices, often used in IoT applications. The CoAP server was implemented by using the python library ```iaocoap```.
+#### CoAP server
 
+CoAP server is implemented as a [python script](server/server.py) using [Aiocoap](https://aiocoap.readthedocs.io/en/latest/index.html) library. It defines several endpoints for clients, where they can send or get data. It also manages encryption side, by defining which endpoints are to be secured. After relevant data is received from an endpoint, it is stored in locally running MongoDB database.
 
-### Cloud
-Oracle cloud was selected as the cloud infrastructure we were going to use. Following are the feature of Oracle cloud,
+#### Web interface
 
+Web server is implemented as a [python script](server/web/web.py) using [Bottle](https://bottlepy.org/docs/dev/) web framework. The web pages are designed using [Bootstrap 5](https://getbootstrap.com/) fronted toolkit. After getting a client connection, the script queries MongoDB server to acquire data. Displayed time is shown in UTC, based on when data were inserted into the DB.
 
-Free for Limited-time 30 day free trial
-- US $300 credit for 30 days
-- Up to eight instances across all available services
-- Up to 5 TB of storage
+#### Database
 
+[MongoDB](https://www.mongodb.com/) is used as the database for storage of acquired data. It's the most popular database used for python projects, especially if they won't need to access large amounts of data. It was chosen primarily due to the easy manipulation. Local MongoDB server needs to be installed and set up before running any of the other server-side python scripts. 
 
-Always Free
-- Compute: (Note- 1 Oracle OCPU = 2 vCPUs)
-- 2 AMD-based VMs: 1/8 OCPU = 0.25 vCPU with 1 GB RAM each
-- 4 Arm-based VMs: 24 GB RAM total, 3,000 OCPU hours and - 18,000 GB memory hours per month
-- 2 Block Volumes Storage, 200 GB total
-- Virtual Cloud Networks (VCN): Maximum of 2 VCNs, includes IPv4 and IPv6 support
+---
 
+## Getting Started
 
-### Database and Web Page
-
-
-MongoDB was selected as the database management system and the implementation of the database interface was done by using python library ```pymongo```.
-
-
-The webpage was developed using Bottleneck Framework and Bootstrap.
-
-
-## Procedure
-
-
-- First, the FIT IOT-LAB test M3 board was selected from the test bed. We focused only on two sensors in this board, namely light sensor and pressure and temperature sensor. SEnsors continue to measure light intensity, atmospheric pressure and ambient temperature.
-
-
-- Then, initiate the pressure sensor and light sensor to start sampling data using I2C communication. There is one sensor to measure both pressure and temperature. It reads temperature and Pressure. Then, the light sensor reads light intensity. These 2 sensors connected to the MCU via the I2C bus are embedded into the IoT-LAB M3 board. At MCU, temperature, pressure and light intensity raw measured data are converted to values in Celcius, Pascal and Lux respectively.
-
-
-    - Sensor reading cycle summary
-
-
-        -  libraries used:
-            - lpsxxx: RIOT pressure and temperature sensor driver
-                - bug in the driver caused wrong temperature readings in the range of 170+ Celsius
-                    (https://github.com/RIOT-OS/RIOT/issues/20093)
-                - fixed with internal driver lpsxxx_internal / lps331
-            - isl29020: RIOT light sensor driver for measuring ambient light in lux
-            - ztimer for setting sleep time
-                - RIOT OS will set the deepest possible sleep mode when idle.
-        - modules:
-        - Sleep time between measurements:
-            - dynamically scaled between 2.5 and 60 seconds after each reading cycle
-            - 1000 * (30.0 / diff^2) ms,
-            where diff = difference between consecutive measurements * sensor-specific sensitivity multiplier
-            (max diff of the two lps measurements used)
-
-
-- Then, the board (end-node) is connected to 802.15.4 network, which is a local network. The data acquired are transferred through this network. In order to connect to the internet we use a border router. Here, this border router is also connected to the same local 802.15.4 network and this border router is connected to the master board using a serial link. The data that transferred my en-node is now transferred to the master board through serial link. Then, this master board transfers data to internet as normal ipv6 packet and it is received by the server which is running on a linux machine to process.
-
-
-- The data transferred to internet is stored in MongoDB which the in between communication is carried using CoAP and also the measured data (temperature, pressure and light intensity) including time(UTC) are transferred to the web page to display. In the second case, the communication is carried out using CoAP and DTLS for encryption. [Click here to go to webpage](http://144.24.196.189:8080/)
-
-
+- Clone this repository on a linux machine, install MongoDB, Python3, pymongo and aiocoap. Set up a replica set for MongoDB server. Do not forget to enable ports 8080 (web) and 5684 (CoAP) in firewall. 
+- Run ```./server/start.sh``` to start all server side programs
+- Connect to FIT IOT-LAB testbed using ssh, or install cli tools & build environment locally
+- Clone repository, set up toolchain according to your own environment
+- Authenticate yourself using ```iotlab-auth``` command
+- Run ```python run.py -e -r``` to build and flash both the border router and end node firmware
+- According to the script output, check available IPv6 interfaces and addresses in a given testbed side, and start router by running ```sudo ethos_uhcpd.py < router_id > < tap interface > < ipv6 address >```
+- If you wish to view serial output of end-node, run ```nc < end node id > 20000```
+- To finish up the experiment on the testbed and free up resources, run ``` python run.py -t``` 
+- To stop the server run ```./server/stop.sh```
 
 ## Demonstration
 
-
-The following is the demonstration video of our project,
-
-
-[![DEMO VIDEO](images/demo_project.png)](https://youtu.be/iyjr8yyTiv8)
-
-
-
-
+[![Video](images/demo_project.png)](https://youtu.be/iyjr8yyTiv8)
