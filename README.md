@@ -23,6 +23,7 @@ This is a project for IoT course at the university of Oulu. Aim of the [assignme
 Hardware is provided by a remote testbed, [FIT IOT-LAB](https://www.iot-lab.info/). We used the [IoT-LaB M3](https://www.iot-lab.info/docs/boards/iot-lab-m3/) board, based on STM32F103REY (ARM Cortex M3). This board was specifically designed for the testbed, offers a lot of sensors as well as serial & 802.15.4 interfaces. Used sensors in this project:
 - **ISL29020** - light sensor measuring both visible and IR light intensity
 - **LPS331AP** - pressure and Temperature sensor 
+
 Both sensors are connected to I2C bus.
 
 ![Local Image](images/Architecture.PNG)
