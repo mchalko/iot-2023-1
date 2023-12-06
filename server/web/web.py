@@ -22,10 +22,6 @@ STATIC_WEB_ROUTES = {
     "/data" : "data"
 }
 
-def make_path(path):
-    p =  f"{os.path.dirname(os.path.abspath(sys.argv[0]))}/views/{path}"
-    return p
-
 def route(path: str, method: str = "GET"):
     """Decorator to add default headers to routes"""
     def inner(func):
@@ -45,12 +41,14 @@ def get_data():
 def get_time():
     return db.get_last_time()
 
+# need to make sure we are in the right directory, so paths of views are correct
+work_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+os.chdir(work_dir)
+
+# routes for static web pages
 for k, v in STATIC_WEB_ROUTES.items():
     # apply custom headers
-    route(k, "GET")(lambda x=v, **kwargs : bottle.template(make_path(x), **kwargs))
+    route(k, "GET")(lambda x=v, **kwargs : bottle.template( f"views/{x}", **kwargs))
     
-
-# ------------------------------------------------------------------------------
 # Run the httpserver
-# ------------------------------------------------------------------------------
 bottle.run(**SERVER_OPTS)
