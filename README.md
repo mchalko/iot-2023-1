@@ -66,7 +66,7 @@ Web server is implemented as a [python script](server/web/web.py) using [Bottle]
 - Clone this repository on a linux machine, install MongoDB, Python3, pymongo and aiocoap. Set up a replica set for MongoDB server. Do not forget to enable ports 8080 (web) and 5684 (CoAP) in firewall
 - Run ```./server/start.sh``` to start all server side programs
 - Connect to FIT IOT-LAB testbed using ssh, or install cli tools & build environment locally
-- Clone repository, set up toolchain according to your own environment
+- Clone repository, initialize submodules, set up toolchain according to your own environment
 - Authenticate yourself using ```iotlab-auth``` command
 - Run ```python run.py -e -r``` to build and flash both the border router and end node firmware
 - According to the script output, check available IPv6 interfaces and addresses in a given testbed side, and start router by running ```sudo ethos_uhcpd.py < router_id > < tap interface > < ipv6 address >```
